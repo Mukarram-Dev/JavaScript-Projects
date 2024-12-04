@@ -7,7 +7,7 @@ class Book {
   }
 
   borrow() {
-    if (this.status == "available") {
+    if (this.status.toLowerCase() == "available") {
       this.status = "borrowed";
       logPrint("Book Borrowed Successful");
     } else {
@@ -16,7 +16,7 @@ class Book {
   }
 
   returnBook() {
-    if (this.status == "borrowed") {
+    if (this.status.toLowerCase() == "borrowed") {
       this.status = "available";
       logPrint("Book returned Successful");
     } else {
@@ -25,7 +25,7 @@ class Book {
   }
 
   reserved() {
-    if (this.status == "available") {
+    if (this.status.toLowerCase() == "available") {
       this.status = "reserved";
       logPrint("Book reserved Successful");
     } else {
@@ -46,8 +46,8 @@ class Library {
   removeBook(id) {
     let bookIndex = this.books.findIndex((element) => element.id == id);
     if (bookIndex != -1) {
-      this.books.splice(bookIndex, 1);
       logPrint(`${this.books[bookIndex].bookTitle} has been removed`);
+      this.books.splice(bookIndex, 1);
     } else {
       logPrint(`book not found`);
     }
@@ -79,7 +79,7 @@ class Library {
     console.log("\nBooks in the Library:");
     this.books.forEach((book) => {
       console.log(
-        `ID: ${book.id}, Title: ${book.bookTitle}, Author: ${book.author}, Status: ${book.status}`
+        `\nID: ${book.id}, Title: ${book.bookTitle}, Author: ${book.author}, Status: ${book.status}`
       );
     });
   }
@@ -108,7 +108,6 @@ function customPrompt(message, time = 0) {
 
 async function main() {
   const library = new Library();
-  const book= new Book();
   while (true) {
     library.showMenu();
     const choice = await customPrompt("Enter your choice (1-5):", 3000);
@@ -119,12 +118,13 @@ async function main() {
         const title = await customPrompt("Enter book title:");
         const author = await customPrompt("Enter book author:");
         const status = await customPrompt("Enter book status:");
-        const book = new Book(author, title, status, id);
-        library.addBook(book);
+        const newBook = new Book(author, title, status, id);
+        library.addBook(newBook);
         break;
 
       case "2":
-        const bookId = await customPrompt("Enter book ID to remove:");
+        library.viewBooks();
+        var bookId = await customPrompt("Enter book ID to remove:");
         library.removeBook(bookId);
         break;
 
@@ -137,8 +137,34 @@ async function main() {
         library.viewBooks();
         break;
       case "5":
-        
         library.viewBooks();
+        bookId = await customPrompt("Enter book ID to borrow:");
+        var book = library.books.find((element) => element.id == bookId);
+        if (book) {
+          book.borrow();
+        } else {
+          console.log(`${bookId} not found in the library.`);
+        }
+        break;
+      case "6":
+        library.viewBooks();
+       var bookTitle = await customPrompt("Enter book title to return:");
+        book = library.books.find((element) => element.bookTitle == bookTitle);
+        if (book) {
+          book.returnBook();
+        } else {
+          console.log(`${bookId} not found in the library.`);
+        }
+        break;
+      case "7":
+        library.viewBooks();
+        bookTitle = await customPrompt("Enter book title to reserve:");
+        book = library.books.find((element) => element.bookTitle == bookTitle);
+        if (book) {
+          book.reserved();
+        } else {
+          console.log(`${bookId} not found in the library.`);
+        }
         break;
 
       case "8":
