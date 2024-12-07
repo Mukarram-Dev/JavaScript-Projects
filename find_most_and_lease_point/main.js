@@ -12,18 +12,18 @@ function breakingRecords(scores) {
   let maxNum = scores[0];
 
   scores.forEach((element) => {
-    if (element > maxNum && element != minNum && element != maxNum) {
+    if (element > maxNum && element!=minNum && element!=maxNum) {
       maxNum = element;
       maxCount++;
-    } else if (element < minNum && element != minNum && element != maxNum) {
-      minNum = element;
-      minCount++;
+    } else if (element < minNum && element!=minNum && element!=maxNum) { 
+        minNum = element;
+        minCount++;   
     } else {
-      return;
+     return;
     }
   });
 
-  return [maxCount, minCount];
+  return [maxCount,minCount];
 }
 
 async function main() {
