@@ -6,27 +6,27 @@ const rl = readline.createInterface({
 });
 
 function matchingString(s, q) {
-  let countArr = Array.from({length:q.length},()=>0);
-  for (let i = 0; i < q.length; i++) {
-    for (let j = 0; j < s.length; j++) {
-      if (q[i] == s[j]) {
-        if (countArr[i] != null) {
-          countArr[i]++;
-        } else {
-          countArr[i] = 0;
-        }
-      }
-    }
+  let frequencyMap = {};
+  let countResult = [];
+
+  for (var string of s) {
+    frequencyMap[string] = (frequencyMap[string] || 0) + 1;
   }
-  return countArr;
+
+  for (var query of q) {
+    countResult.push(frequencyMap[query] || 0);
+  }
+
+  return countResult;
 }
 
 async function main() {
   let stringArr = [];
   let queryString = [];
 
-  const arrayStrSize = await rl.question("Enter the size of String array: ");
-  
+  const arrayStrSize = parseInt(
+    await rl.question("Enter the size of String array: ")
+  );
 
   for (let i = 0; i < arrayStrSize; i++) {
     let element = await rl.question(
@@ -34,8 +34,8 @@ async function main() {
     );
     stringArr.push(element);
   }
-  const quryStrSize = await rl.question(
-    "Enter the size of Query String array: "
+  const quryStrSize = parseInt(
+    await rl.question("Enter the size of Query String array: ")
   );
   for (let i = 0; i < quryStrSize; i++) {
     let element = await rl.question(
